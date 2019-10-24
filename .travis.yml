@@ -1,0 +1,20 @@
+sudo: required
+language: python
+matrix:
+  include:
+    - dist: xenial
+    - dist: bionic
+
+env:
+  global:
+    # Prevent extraneous log messages
+    - DEBIAN_FRONTEND=noninteractive
+
+before_install:
+  - . postgres.sh
+
+script:
+  - psql -l -U travis -h 127.0.0.1
+
+install:
+  - psql -l -U travis -h 127.0.0.1
