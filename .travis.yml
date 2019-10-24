@@ -12,9 +12,11 @@ env:
 
 before_install:
   - . postgres.sh
+  - . miniconda.sh
 
 script:
   - psql -l -U travis -h 127.0.0.1
+  - python --version
 
 install:
   - psql -l -U travis -h 127.0.0.1
