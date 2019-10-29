@@ -1,6 +1,7 @@
 
 sudo apt-get install apache2 apache2-dev
 sudo a2enmod headers rewrite proxy cgi expires authz_groupfile
+pip install --upgrade mod-wsgi
 
 MOD_WSGI_SO=$(find $HOME/miniconda/envs/prod -type f -name 'mod_wsgi*.so')
 echo $MOD_WSGI_SO
