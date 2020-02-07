@@ -11,8 +11,6 @@ if [ ! -f $HOME/miniconda/envs/prod/bin/python ]; then
     conda create -n prod python=$PYTHON_VERSION --file conda_requirements.txt
     conda activate prod
     conda clean -y --all -q
-    # Clear out stuff that may conflict
-    rm -rf $HOME/.cache/pip
     python -m pip install --upgrade -r pip_requirements.txt
     rm -rf $HOME/miniconda/pkgs/cache/*
 fi
