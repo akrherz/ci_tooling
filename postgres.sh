@@ -14,6 +14,8 @@ sudo systemctl stop postgresql@10-main.service
 sudo apt-get -qq install -y --no-install-suggests --no-install-recommends postgresql-11-postgis-2.5-scripts postgresql-11 postgresql-client-11 postgresql-11-postgis-2.5
 sudo systemctl status postgresql@11-main.service
 sudo systemctl stop postgresql@11-main.service
+# https://travis-ci.community/t/postgres-default-port-changed-from-5432-to-5433/7347/10
+sudo sed -i "s/^data_directory.*/data_directory = \'\/var\/lib\/postgresql\/11\/main\/\'/" /etc/postgresql/11/main/postgresql.conf
 sudo sed -i 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf
 sudo grep port /etc/postgresql/11/main/postgresql.conf
 sudo cp /etc/postgresql/10/main/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf
