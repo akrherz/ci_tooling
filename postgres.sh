@@ -11,6 +11,7 @@
 sudo apt-get -qq update
 
 sudo systemctl stop postgresql@10-main.service
+sudo systemctl status postgresql@10-main.service
 sudo apt-get -qq install -y --no-install-suggests --no-install-recommends postgresql-11-postgis-2.5-scripts postgresql-11 postgresql-client-11 postgresql-11-postgis-2.5
 sudo systemctl status postgresql@11-main.service
 sudo systemctl stop postgresql@11-main.service
