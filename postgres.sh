@@ -1,6 +1,6 @@
 ###
 # Setup PostgreSQL 11 or 12 on Travis-CI(ubuntu xenial, bionic)
-
+set -x
 # https://travis-ci.community/t/install-postgresql-11/3894/5
 
 # Setup ubuntugis repo
@@ -22,7 +22,7 @@ sudo sed -i "s/^data_directory.*/data_directory = \'\/var\/lib\/postgresql\/11\/
 sudo sed -i 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf
 sudo grep port /etc/postgresql/11/main/postgresql.conf
 sudo cp /etc/postgresql/10/main/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf
-sudo systemctl reload postgresql@11-main.service
+sudo systemctl reload postgresql@11-main.service || true
 sudo systemctl start postgresql@11-main.service
 sudo systemctl status postgresql@11-main.service -l
 sudo cat /var/log/postgresql/postgresql-11-main.log
