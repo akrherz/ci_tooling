@@ -1,6 +1,6 @@
 ###
 # Setup PostgreSQL 11 or 12 on Travis-CI(ubuntu xenial, bionic)
-set -x
+
 # https://travis-ci.community/t/install-postgresql-11/3894/5
 
 # Setup ubuntugis repo
