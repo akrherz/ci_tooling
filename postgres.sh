@@ -30,3 +30,4 @@ sudo cat /var/log/postgresql/postgresql-11-main.log
 
 export PATH="/usr/lib/postgresql/11/bin:$PATH"
 psql -h 127.0.0.1 -c 'CREATE ROLE travis SUPERUSER LOGIN CREATEDB;' -U postgres || true
+psql -h 127.0.0.1 -c 'CREATE ROLE runner SUPERUSER LOGIN CREATEDB;' -U postgres || true
