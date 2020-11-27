@@ -21,7 +21,8 @@ sudo systemctl stop postgresql@11-main.service || true
 sudo sed -i "s/^data_directory.*/data_directory = \'\/var\/lib\/postgresql\/11\/main\/\'/" /etc/postgresql/11/main/postgresql.conf
 sudo sed -i 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf
 sudo grep port /etc/postgresql/11/main/postgresql.conf
-sudo cp postgres_files/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf
+sudo sed -i 's/md5/trust/' /etc/postgresql/11/main/pg_hba.conf
+sudo sed -i 's/peer/trust/' /etc/postgresql/11/main/pg_hba.conf
 sudo systemctl reload postgresql@11-main.service || true
 sudo systemctl start postgresql@11-main.service
 sudo systemctl status postgresql@11-main.service -l
