@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Run bundled scripts
-      with:
+      env:
         PYTHON_VERSION: ${{ matrix.python-version }}
       run: |
         . postgres.sh
