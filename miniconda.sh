@@ -8,7 +8,8 @@ if [ ! -f $HOME/miniconda/envs/prod/bin/python ]; then
     conda config --set quiet True --set always_yes yes --set changeps1 no
     conda config --prepend channels conda-forge
     conda config --set channel_priority strict
-    conda create -n prod python=$PYTHON_VERSION --file conda_requirements.txt
+    echo Installing Python Version ${matrix.PYTHON_VERSION}
+    conda create -n prod python=${matrix.PYTHON_VERSION} --file conda_requirements.txt
     conda activate prod
     conda clean -y --all -q
     python -m pip install --upgrade -r pip_requirements.txt
