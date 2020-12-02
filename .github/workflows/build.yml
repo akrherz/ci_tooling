@@ -2,17 +2,17 @@ name: Install and Test
 on: [push]
 jobs:
   build-linux:
-    name: Python (${{ matrix.python-version }})
+    name: Python (${{ matrix.PYTHON_VERSION }})
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.6", "3.8", "3.9"]
+        PYTHON_VERSION: ["3.6", "3.8", "3.9"]
+    env:
+      PYTHON_VERSION: ${{ matrix.PYTHON_VERSION }}
     steps:
     - uses: actions/checkout@v2
 
     - name: Run bundled scripts
-      env:
-        PYTHON_VERSION: ${{ matrix.python-version }}
       run: |
         . postgres.sh
         . memcached.sh
