@@ -8,7 +8,7 @@
 #echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | sudo tee -a /etc/apt/sources.list.d/postgresql.list
 
 # Ensure repo info is current
-sudo apt-get -qq update
+sudo apt-get -qq update || true
 
 # https://travis-ci.community/t/bionic-postgresql-10-no-longer-starts-up/6002/13
 sudo apt-get purge postgresql-9.3
