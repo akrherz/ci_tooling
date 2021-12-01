@@ -1,13 +1,12 @@
 # Get conda in our $PATH
 export PATH="$HOME/miniconda/bin:$PATH"
+export MF="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
 
 if [ ! -f $HOME/miniconda/envs/prod/bin/python ]; then
-    wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+    wget -q $MF -O miniconda.sh
     bash miniconda.sh -f -b -p $HOME/miniconda
     . $HOME/miniconda/etc/profile.d/conda.sh
     conda config --set quiet True --set always_yes yes --set changeps1 no
-    conda config --prepend channels conda-forge
-    conda config --set channel_priority strict
     echo Installing Python Version ${PYTHON_VERSION}
     conda create -n prod python=${PYTHON_VERSION} --file conda_requirements.txt
     conda activate prod
