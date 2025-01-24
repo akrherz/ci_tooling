@@ -4,6 +4,7 @@
 sudo mkdir /opt/iemwebfarm
 sudo git clone https://github.com/akrherz/iemwebfarm.git /opt/iemwebfarm
 
+sudo apt-get update
 sudo apt-get install apache2 apache2-dev
 
 python -m pip install mod_wsgi
