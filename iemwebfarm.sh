@@ -5,7 +5,7 @@ sudo mkdir /opt/iemwebfarm
 sudo git clone https://github.com/akrherz/iemwebfarm.git /opt/iemwebfarm
 
 sudo apt-get update
-sudo apt-get install apache2 apache2-dev php-fpm php-mapscript
+sudo apt-get install apache2 apache2-dev php-fpm php-mapscript-ng
 
 python -m pip install mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
