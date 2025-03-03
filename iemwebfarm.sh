@@ -43,4 +43,4 @@ sudo systemctl restart apache2
 
 # Write a simple PHP script into the web root and ensure that we can access it
 echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php > /dev/null
-curl http://localhost/info.php
+curl -f http://localhost/info.php
