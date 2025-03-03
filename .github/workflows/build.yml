@@ -39,7 +39,6 @@ jobs:
     - name: Run bundled scripts
       run: |
         set -e
-        . postgres.sh
         . memcached.sh
         . iemwebfarm.sh
         . mod_wsgi.sh
