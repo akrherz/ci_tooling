@@ -5,7 +5,7 @@ sudo mkdir /opt/iemwebfarm
 sudo git clone https://github.com/akrherz/iemwebfarm.git /opt/iemwebfarm
 
 sudo apt-get update
-sudo apt-get install apache2 apache2-dev
+sudo apt-get install apache2 apache2-dev php-fpm php-mapscript
 
 python -m pip install mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
@@ -40,3 +40,7 @@ sudo mkdir -p /var/cache/matplotlib
 sudo chown www-data /var/cache/matplotlib
 
 sudo systemctl restart apache2
+
+# Write a simple PHP script into the web root and ensure that we can access it
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php > /dev/null
+curl http://localhost/info.php
