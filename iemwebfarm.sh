@@ -19,6 +19,7 @@ echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabl
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
+sudo cp /opt/iemwebfarm/apache_conf.d/php.conf /etc/apache2/sites-enabled/
 sudo mkdir /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
@@ -42,5 +43,9 @@ sudo chown www-data /var/cache/matplotlib
 sudo systemctl restart apache2
 
 # Write a simple PHP script into the web root and ensure that we can access it
-echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php > /dev/null
-curl -f http://localhost/info.php
+echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.php > /dev/null
+result=$(curl -f http://localhost/info.php)
+if [ "$result" != "2" ]; then
+    echo "Failed to get expected result '$result' from PHP script"
+    exit 1
+fi
