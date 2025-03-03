@@ -5,7 +5,7 @@ sudo mkdir /opt/iemwebfarm
 sudo git clone https://github.com/akrherz/iemwebfarm.git /opt/iemwebfarm
 
 sudo apt-get update
-sudo apt-get install apache2 apache2-dev
+sudo apt-get install apache2 apache2-dev php-fpm php-mapscript-ng
 
 python -m pip install mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
@@ -19,6 +19,7 @@ echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabl
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
+sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/conf.d/
 sudo mkdir /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
@@ -31,6 +32,8 @@ chmod 755 $HOME
 
 # Configure apache
 sudo a2enmod headers rewrite proxy proxy_http proxy_balancer ssl lbmethod_byrequests cgi expires authz_groupfile
+sudo a2enmod proxy_fcgi setenvif
+sudo a2enconf php8.3-fpm
 
 # allow vhosts
 sudo a2dissite 000-default.conf
@@ -40,3 +43,11 @@ sudo mkdir -p /var/cache/matplotlib
 sudo chown www-data /var/cache/matplotlib
 
 sudo systemctl restart apache2
+
+# Write a simple PHP script into the web root and ensure that we can access it
+echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.php > /dev/null
+result=$(curl -f http://localhost/info.php)
+if [ "$result" != "2" ]; then
+    echo "Failed to get expected result '$result' from PHP script"
+    exit 1
+fi
