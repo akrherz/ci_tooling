@@ -43,10 +43,12 @@ sudo mkdir -p /var/cache/matplotlib
 sudo chown www-data /var/cache/matplotlib
 
 sudo systemctl restart apache2
+sudo systemctl restart php8.3-fpm
 
 # Write a simple PHP script into the web root and ensure that we can access it
-echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.php > /dev/null
-result=$(curl -f http://localhost/info.php)
+# We use phtml to ensure we allow this type of script
+echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.phtml > /dev/null
+result=$(curl -f http://localhost/info.phtml)
 if [ "$result" != "2" ]; then
     echo "Failed to get expected result '$result' from PHP script"
     exit 1
