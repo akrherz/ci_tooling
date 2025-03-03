@@ -19,7 +19,7 @@ echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabl
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
-sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/conf.d/
+sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/pool.d/
 sudo mkdir /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
@@ -48,8 +48,8 @@ sudo systemctl restart php8.3-fpm
 # Write a simple PHP script into the web root and ensure that we can access it
 # We use phtml to ensure we allow this type of script
 echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.phtml > /dev/null
-result=$(curl http://localhost/info.phtml)
+result=$(curl -f http://localhost/info.phtml)
 if [ "$result" != "2" ]; then
     echo "Failed to get expected result '$result' from PHP script"
-    # exit 1
+    exit 1
 fi
