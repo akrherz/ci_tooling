@@ -23,6 +23,8 @@ mamba install -y -n prod mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
 # Need to explicitly tell mod_wsgi where to look for socket placement
 echo "WSGISocketPrefix /var/run/apache2/wsgi" | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf > /dev/null;
+# Add default .wsgi handler for the test below
+echo "AddHandler wsgi-script .wsgi" | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf > /dev/null;
 # This may be a requirement for mod-wsgi to properly find python tooling?
 echo "export PATH=/opt/miniconda3/envs/prod/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
 # Newer PROJ needs this
