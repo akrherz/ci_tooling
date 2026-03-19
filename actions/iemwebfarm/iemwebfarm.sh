@@ -73,17 +73,11 @@ if [ "$result" != "2" ]; then
 fi
 
 # Write a simple mod_wsgi app and ensure that we can access it
-echo "def application(environ, start_response):
-    status = '200 OK'
-    output = b'Hello, World!'
-
-    response_headers = [('Content-type', 'text/plain'),
-                        ('Content-Length', str(len(output)))]
-    start_response(status, response_headers)
-
-    return [output]" | sudo tee /var/www/html/app.wsgi > /dev/null
+sudo cp webtest/app.wsgi /var/www/html/app.wsgi
 result=$(curl -f http://localhost/app.wsgi)
 if [ "$result" != "Hello, World!" ]; then
     echo "Failed to get expected result '$result' from WSGI app"
+    sudo cat /var/log/apache2/error.log
     exit 1
 fi
+
