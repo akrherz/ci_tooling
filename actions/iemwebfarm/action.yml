@@ -18,7 +18,8 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout repository
+    # This checks out the caller repo, since we need to see environment file.
+    - name: Checkout
       uses: actions/checkout@v6
 
     - name: Setup micromamba
@@ -36,9 +37,26 @@ runs:
         environment-name: ${{ inputs.environment-name }}
         cache-environment: true
 
+    # Check if a pip_requirements.txt file exists
+    - name: Pip install needed?
+      shell: bash -l {0}
+      run: |
+        if [[ -f "pip_requirements.txt" ]]; then
+          echo "pip_requirements=true" >> $GITHUB_OUTPUT
+        else
+          echo "pip_requirements=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Optionally run pip install
+      if: steps.pip_install_needed.outputs.pip_requirements == 'true'
+      shell: bash -l {0}
+      run: |
+        set -euo pipefail
+        mamba run -n "${{ inputs.environment-name }}" python -m pip install -r pip_requirements.txt --no-deps
+
     - name: Run iemwebfarm provisioning inside environment
       shell: bash -l {0}
       run: |
         set -euo pipefail
-
-        mamba run -n "${{ inputs.environment-name }}" bash -l "${{ github.action_path }}/iemwebfarm.sh"
+        cd "${{ github.action_path }}"
+        mamba run -n "${{ inputs.environment-name }}" bash -l "iemwebfarm.sh"
