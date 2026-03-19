@@ -26,5 +26,5 @@ jobs:
       uses: ./actions/iemwebfarm
       with:
         environment-file: environment.yml
-        create-args: "python=${{ matrix.PYTHON_VERSION }}"
+        python-version: "${{ matrix.PYTHON_VERSION }}"
         environment-name: prod

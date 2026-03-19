@@ -38,20 +38,24 @@ runs:
         cache-environment: true
 
     # Check if a pip_requirements.txt file exists
-    - name: Pip install needed?
+    - name: Pip install needed
+      id: pip_install_needed
       shell: bash -l {0}
       run: |
         if [[ -f "pip_requirements.txt" ]]; then
+          echo "Found pip_requirements.txt, will run pip install."
           echo "pip_requirements=true" >> $GITHUB_OUTPUT
         else
+          echo "No pip_requirements.txt found, skipping pip install."
           echo "pip_requirements=false" >> $GITHUB_OUTPUT
         fi
 
     - name: Optionally run pip install
-      if: steps.pip_install_needed.outputs.pip_requirements == 'true'
+      if: ${{ steps.pip_install_needed.outputs.pip_requirements == 'true' }}
       shell: bash -l {0}
       run: |
         set -euo pipefail
+        echo "Running pip install from pip_requirements.txt."
         mamba run -n "${{ inputs.environment-name }}" python -m pip install -r pip_requirements.txt --no-deps
 
     - name: Run iemwebfarm provisioning inside environment
