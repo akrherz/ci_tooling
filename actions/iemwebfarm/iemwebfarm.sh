@@ -18,8 +18,8 @@ fi
 
 # conda-forge has a mod_wsgi that should work, with some goosing to
 # LD_PRELOAD done in akrherz/iemwebfarm repo
-mamba activate prod
-mamba install -y mod_wsgi
+# Avoid requiring shell activation in CI: install into the `prod` env directly
+mamba install -y -n prod mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
 # This may be a requirement for mod-wsgi to properly find python tooling?
 echo "export PATH=/opt/miniconda3/envs/prod/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null

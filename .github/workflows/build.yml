@@ -22,29 +22,9 @@ jobs:
     steps:
     - uses: actions/checkout@v6
 
-    # needed for iemwebfarm to run
-    - name: Setup Python
-      uses: mamba-org/setup-micromamba@v2
+    - name: Setup IEM Webfarm environment
+      uses: ./actions/iemwebfarm
       with:
         environment-file: environment.yml
-        condarc: |
-          channels:
-            - conda-forge
-        init-shell: >-
-          bash
-        create-args: >-
-          python=${{ env.PYTHON_VERSION }}
+        create-args: "python=${{ matrix.PYTHON_VERSION }}"
         environment-name: prod
-        cache-environment: true
-
-    - name: Run bundled scripts
-      run: |
-        set -e
-        . memcached.sh
-        . iemwebfarm.sh
-        . mod_wsgi.sh
-
-    #- name: Setup upterm session
-    #  uses: lhotari/action-upterm@v1
-    #  with:
-    #    limit-access-to-actor: true
