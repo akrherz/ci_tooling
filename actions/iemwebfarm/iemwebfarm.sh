@@ -35,9 +35,13 @@ echo "$MOD_WSGI_SO"
 echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 
+# Needed for apache config settings
 sudo cp /opt/iemwebfarm/apache_conf.d/00000common.conf /etc/apache2/sites-enabled/
+# Needed for the 404 handler
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
 sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/pool.d/
+# Enable ExecCGI on /var/www/html so that we can test CGI scripts
+sudo cp webtest/docroot.conf /etc/apache2/conf-enabled/
 sudo mkdir -p /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
