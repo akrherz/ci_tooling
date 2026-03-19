@@ -21,6 +21,10 @@ fi
 # Avoid requiring shell activation in CI: install into the `prod` env directly
 mamba install -y -n prod mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
+# Need to explicitly tell mod_wsgi where to look for socket placement
+echo "WSGISocketPrefix /var/run/apache2/wsgi" | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf > /dev/null;
+# Add default .wsgi handler for the test below
+echo "AddHandler wsgi-script .wsgi" | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf > /dev/null;
 # This may be a requirement for mod-wsgi to properly find python tooling?
 echo "export PATH=/opt/miniconda3/envs/prod/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
 # Newer PROJ needs this
@@ -31,9 +35,13 @@ echo "$MOD_WSGI_SO"
 echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 
+# Needed for apache config settings
 sudo cp /opt/iemwebfarm/apache_conf.d/00000common.conf /etc/apache2/sites-enabled/
+# Needed for the 404 handler
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
 sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/pool.d/
+# Enable ExecCGI on /var/www/html so that we can test CGI scripts
+sudo cp webtest/docroot.conf /etc/apache2/conf-enabled/
 sudo mkdir -p /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
@@ -62,8 +70,19 @@ sudo systemctl restart php8.3-fpm
 # Write a simple PHP script into the web root and ensure that we can access it
 # We use phtml to ensure we allow this type of script
 echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.phtml > /dev/null
-result=$(curl -f http://localhost/info.phtml)
+result=$(curl  http://localhost/info.phtml)
 if [ "$result" != "2" ]; then
     echo "Failed to get expected result '$result' from PHP script"
+    sudo cat /var/log/apache2/error.log
     exit 1
 fi
+
+# Write a simple mod_wsgi app and ensure that we can access it
+sudo cp webtest/app.wsgi /var/www/html/app.wsgi
+result=$(curl  http://localhost/app.wsgi)
+if [ "$result" != "Hello, World!" ]; then
+    echo "Failed to get expected result '$result' from WSGI app"
+    sudo cat /var/log/apache2/error.log
+    exit 1
+fi
+
