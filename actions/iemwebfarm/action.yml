@@ -1,0 +1,43 @@
+name: 'IEM Webfarm Micromamba + Apache Setup'
+description: 'Prepare micromamba environment and run iemwebfarm.sh (single-purpose action).'
+
+inputs:
+  environment-file:
+    description: 'Path to the micromamba/conda environment file in the consumer repo'
+    required: false
+    default: 'environment.yml'
+  environment-name:
+    description: 'Name of the environment to create/use'
+    required: false
+    default: 'prod'
+  python-version:
+    description: 'Python version to create in the environment (e.g. 3.14)'
+    required: false
+    default: ''
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Setup micromamba
+      uses: mamba-org/setup-micromamba@v2
+      with:
+        environment-file: ${{ inputs.environment-file }}
+        init-shell: >-
+          bash
+        condarc: |
+          channels:
+            - conda-forge
+        create-args: >-
+          python=${{ inputs.python-version }}
+        environment-name: ${{ inputs.environment-name }}
+        cache-environment: true
+
+    - name: Run iemwebfarm provisioning inside environment
+      shell: bash -l {0}
+      run: |
+        set -euo pipefail
+
+        mamba run -n "${{ inputs.environment-name }}" bash -l "${{ github.action_path }}/iemwebfarm.sh"
