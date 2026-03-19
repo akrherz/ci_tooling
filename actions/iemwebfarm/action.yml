@@ -25,6 +25,8 @@ runs:
       uses: mamba-org/setup-micromamba@v2
       with:
         environment-file: ${{ inputs.environment-file }}
+        init-shell: >-
+          bash
         condarc: |
           channels:
             - conda-forge
@@ -38,4 +40,4 @@ runs:
       run: |
         set -euo pipefail
 
-        mamba run -n "${{ inputs.environment-name }}" -- bash "${{ github.action_path }}/actions/iemwebfarm/iemwebfarm.sh"
+        mamba run -n "${{ inputs.environment-name }}" bash -l "${{ github.action_path }}/iemwebfarm.sh"
