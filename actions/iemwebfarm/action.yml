@@ -32,6 +32,7 @@ runs:
             - conda-forge
         create-args: >-
           python=${{ inputs.python-version }}
+          mamba
         environment-name: ${{ inputs.environment-name }}
         cache-environment: true
 
