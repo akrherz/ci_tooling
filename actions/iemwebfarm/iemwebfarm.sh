@@ -46,7 +46,9 @@ sudo mkdir -p /etc/systemd/system/apache2.service.d
 sudo cp systemd/apache2_override.conf /etc/systemd/system/apache2.service.d/override.conf
 sudo systemctl daemon-reload
 
-# Setup the log directory
+# Setup the /mesonet directory for runner usage
+sudo mkdir /mesonet
+sudo chown runner /mesonet
 sudo mkdir -p /mesonet/www/logs
 
 # Ensure the home directory can be seen by apache
