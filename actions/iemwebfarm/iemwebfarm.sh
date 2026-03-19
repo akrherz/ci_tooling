@@ -21,6 +21,8 @@ fi
 # Avoid requiring shell activation in CI: install into the `prod` env directly
 mamba install -y -n prod mod_wsgi
 sudo cp /opt/iemwebfarm/apache_conf.d/mod_wsgi.conf /etc/apache2/sites-enabled/
+# Need to explicitly tell mod_wsgi where to look for socket placement
+echo "WSGISocketPrefix /var/run/apache2/wsgi" | sudo tee -a /etc/apache2/sites-enabled/mod_wsgi.conf > /dev/null;
 # This may be a requirement for mod-wsgi to properly find python tooling?
 echo "export PATH=/opt/miniconda3/envs/prod/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
 # Newer PROJ needs this
@@ -65,5 +67,21 @@ echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.phtml > /dev/null
 result=$(curl -f http://localhost/info.phtml)
 if [ "$result" != "2" ]; then
     echo "Failed to get expected result '$result' from PHP script"
+    exit 1
+fi
+
+# Write a simple mod_wsgi app and ensure that we can access it
+echo "def application(environ, start_response):
+    status = '200 OK'
+    output = b'Hello, World!'
+
+    response_headers = [('Content-type', 'text/plain'),
+                        ('Content-Length', str(len(output)))]
+    start_response(status, response_headers)
+
+    return [output]" | sudo tee /var/www/html/app.wsgi > /dev/null
+result=$(curl -f http://localhost/app.wsgi)
+if [ "$result" != "Hello, World!" ]; then
+    echo "Failed to get expected result '$result' from WSGI app"
     exit 1
 fi

@@ -29,8 +29,8 @@ jobs:
         python-version: "${{ matrix.PYTHON_VERSION }}"
         environment-name: prod
 
-    - name: Setup upterm session
-      if: ${{ matrix.PYTHON_VERSION == '3.10' }}
-      uses: owenthereal/action-upterm@v1
-      with:
-        limit-access-to-actor: true
+    #- name: Setup upterm session
+    #  if: ${{ matrix.PYTHON_VERSION == '3.10' }}
+    #  uses: owenthereal/action-upterm@v1
+    #  with:
+    #    limit-access-to-actor: true
