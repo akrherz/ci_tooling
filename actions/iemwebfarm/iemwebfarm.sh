@@ -26,7 +26,7 @@ echo "export PATH=/opt/miniconda3/envs/prod/bin:$PATH" | sudo tee -a /etc/apache
 # Newer PROJ needs this
 echo "export PROJ_LIB=/opt/miniconda3/envs/prod/share/proj" | sudo tee -a /etc/apache2/envvars > /dev/null
 MOD_WSGI_SO=$(find /opt/miniconda3/envs/prod -type f -name 'mod_wsgi*.so')
-echo $MOD_WSGI_SO
+echo "$MOD_WSGI_SO"
 # Need to load the .so file via the full path as symlinks cause grief
 echo "LoadModule wsgi_module $MOD_WSGI_SO" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
 echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/wsgi.load > /dev/null;
@@ -42,7 +42,7 @@ sudo systemctl daemon-reload
 sudo mkdir -p /mesonet/www/logs
 
 # Ensure the home directory can be seen by apache
-chmod 755 $HOME
+chmod 755 "$HOME"
 
 # Configure apache
 sudo a2enmod headers rewrite proxy proxy_http proxy_balancer ssl lbmethod_byrequests cgi expires authz_groupfile
