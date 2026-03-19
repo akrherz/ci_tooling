@@ -37,10 +37,5 @@ runs:
       shell: bash -l {0}
       run: |
         set -euo pipefail
-        WORKSPACE="${GITHUB_WORKSPACE:-$PWD}"
-        SCRIPT="$WORKSPACE/iemwebfarm.sh"
-        if [ ! -f "$SCRIPT" ]; then
-          echo "Error: provisioning script '$SCRIPT' not found in consumer repository workspace ($WORKSPACE)."
-          exit 1
-        fi
-        mamba run -n "${{ inputs.environment-name }}" -- bash "$SCRIPT"
+
+        mamba run -n "${{ inputs.environment-name }}" -- bash "${{ github.action_path }}/actions/iemwebfarm/iemwebfarm.sh"
