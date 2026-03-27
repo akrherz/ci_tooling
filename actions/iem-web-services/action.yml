@@ -19,7 +19,7 @@ runs:
       run: |
         set -euo pipefail
         cd "${{ github.action_path }}"
-        mamba run -n "${{ inputs.environment-name }}" bash -l "setup.sh ${{ inputs.port }}" 
+        mamba run -n "${{ inputs.environment-name }}" bash -l setup.sh "${{ inputs.port }}" 
 
     - name: Check that iem-web-services is running
       shell: bash -l {0}

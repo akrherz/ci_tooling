@@ -15,5 +15,5 @@ mamba env update -y -n prod -f "$IEMWS/environment.yml"
 cd $IEMWS
 PYTHONPATH=$PYTHONPATH:$(pwd)/src uvicorn \
     --host 0.0.0.0 \
-    --port $PORT \
+    --port "$PORT" \
     iemws.main:app &
