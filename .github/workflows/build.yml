@@ -29,6 +29,9 @@ jobs:
         python-version: "${{ matrix.PYTHON_VERSION }}"
         environment-name: prod
 
+    - name: Setup and Run IEM Web Services
+      uses: ./actions/iem-web-services
+
     #- name: Setup upterm session
     #  if: ${{ matrix.PYTHON_VERSION == '3.10' }}
     #  uses: owenthereal/action-upterm@v1
