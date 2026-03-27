@@ -17,3 +17,15 @@ An example repo can reuse this like so:
     python-version: ${{ matrix.PYTHON_VERSION }}
     environment-name: prod
 ```
+
+## iem-web-services action
+
+1. Assumes that iemwebfarm action was run previously
+2. Sets up akrherz/iem-web-services (FastAPI) to run on port 8080.
+
+```yaml
+- uses: akrherz/ci_tooling/actions/iem-web-services
+  with:
+    port: 8080
+
+```

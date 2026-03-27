@@ -1,0 +1,32 @@
+name: 'IEM Web Services Setup'
+description: 'Setup and run iem-web-services for integration testing.'
+
+inputs:
+  environment-name:
+    description: 'Name of the conda environment to use'
+    required: false
+    default: 'prod'
+  port:
+    description: 'Port to run the iem-web-services on'
+    required: false
+    default: '8080'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup and run iem-web-services
+      shell: bash -l {0}
+      run: |
+        set -euo pipefail
+        cd "${{ github.action_path }}"
+        mamba run -n "${{ inputs.environment-name }}" bash -l setup.sh "${{ inputs.port }}" 
+
+    - name: Check that iem-web-services is running
+      shell: bash -l {0}
+      run: |
+        set -euo pipefail
+        sleep 5 # Wait for the server to start
+        if ! curl -s http://localhost:${{ inputs.port }}/api/1/servertime; then
+          echo "iem-web-services is not running on port ${{ inputs.port }}"
+          exit 1
+        fi
