@@ -10,6 +10,8 @@ sudo git clone https://github.com/akrherz/iem-web-services.git "$IEMWS"
 
 # Mamba install what this repo's environment.yml wants
 mamba env update -y -n prod -f "$IEMWS/environment.yml"
+# we need pyiem as well, this a one-off as iem-web-services pip installs git
+mamba install -y -n prod -c conda-forge pyiem
 
 # Run the iem-web-services
 cd $IEMWS
