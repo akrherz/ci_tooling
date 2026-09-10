@@ -1,0 +1,8 @@
+<?php
+// Ensure mapscript is loaded
+if (!extension_loaded('mapscript')) {
+    http_response_code(500);
+    echo "mapscript not loaded";
+    die();
+}
+echo 1+1;
