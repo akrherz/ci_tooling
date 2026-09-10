@@ -13,8 +13,7 @@ sudo apt-get update
 sudo apt-get install apache2 php-fpm php-mapscript-ng
 
 # Enable mapscript to auto load
-echo "extension=mapscript.so" | sudo tee -a /etc/php/8.3/mods-available/mapscript.ini > /dev/null
-sudo phpenmod mapscript
+sudo phpenmod mapscript-ng
 
 # Ensure that /opt/miniconda3 is a thing and sym links to /home/runner/micromamba
 if [ ! -d "/opt/miniconda3" ]; then
