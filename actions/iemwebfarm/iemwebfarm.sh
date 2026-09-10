@@ -1,3 +1,4 @@
+#!/bin/bash
 #  Get a IEM Webfarm node ready for action
 #  Requires: micromamba to have been run
 #
@@ -10,6 +11,10 @@ sudo git clone https://github.com/akrherz/iemwebfarm.git /opt/iemwebfarm
 
 sudo apt-get update
 sudo apt-get install apache2 php-fpm php-mapscript-ng
+
+# Enable mapscript to auto load
+echo "extension=mapscript.so" | sudo tee -a /etc/php/8.3/mods-available/mapscript.ini > /dev/null
+sudo phpenmod mapscript
 
 # Ensure that /opt/miniconda3 is a thing and sym links to /home/runner/micromamba
 if [ ! -d "/opt/miniconda3" ]; then
@@ -71,7 +76,7 @@ sudo systemctl restart php8.3-fpm
 
 # Write a simple PHP script into the web root and ensure that we can access it
 # We use phtml to ensure we allow this type of script
-echo "<?php echo 1+1; ?>" | sudo tee /var/www/html/info.phtml > /dev/null
+sudo cp webtest/info.phtml /var/www/html/info.phtml
 result=$(curl  http://localhost/info.phtml)
 if [ "$result" != "2" ]; then
     echo "Failed to get expected result '$result' from PHP script"
