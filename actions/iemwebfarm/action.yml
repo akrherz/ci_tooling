@@ -20,10 +20,10 @@ runs:
   steps:
     # This checks out the caller repo, since we need to see environment file.
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
 
     - name: Setup micromamba
-      uses: mamba-org/setup-micromamba@v2
+      uses: mamba-org/setup-micromamba@v3
       with:
         environment-file: ${{ inputs.environment-file }}
         init-shell: >-
