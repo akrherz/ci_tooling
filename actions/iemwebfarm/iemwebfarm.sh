@@ -43,7 +43,7 @@ echo "WSGIApplicationGroup %{GLOBAL}" | sudo tee -a /etc/apache2/mods-enabled/ws
 sudo cp /opt/iemwebfarm/apache_conf.d/00000common.conf /etc/apache2/sites-enabled/
 # Needed for the 404 handler
 sudo cp /opt/iemwebfarm/apache_conf.d/iemwebfarm.conf /etc/apache2/sites-enabled/
-sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.3/fpm/pool.d/
+sudo cp /opt/iemwebfarm/php-fpm.d/00-iem.conf /etc/php/8.5/fpm/pool.d/
 # Enable ExecCGI on /var/www/html so that we can test CGI scripts
 sudo cp webtest/docroot.conf /etc/apache2/conf-enabled/
 sudo mkdir -p /etc/systemd/system/apache2.service.d
@@ -61,7 +61,7 @@ chmod 755 "$HOME"
 # Configure apache
 sudo a2enmod headers rewrite proxy proxy_http proxy_balancer ssl lbmethod_byrequests cgi expires authz_groupfile
 sudo a2enmod proxy_fcgi setenvif
-sudo a2enconf php8.3-fpm
+sudo a2enconf php8.5-fpm
 
 # allow vhosts
 sudo a2dissite 000-default.conf
@@ -71,7 +71,7 @@ sudo mkdir -p /var/cache/matplotlib
 sudo chown www-data /var/cache/matplotlib
 
 sudo systemctl restart apache2
-sudo systemctl restart php8.3-fpm
+sudo systemctl restart php8.5-fpm
 
 # Write a simple PHP script into the web root and ensure that we can access it
 # We use phtml to ensure we allow this type of script
